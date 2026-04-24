@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Твое резюме | Frontend • DevOps • Security • AI</title>
+    <style>
+        :root {
+            --bg: #0f0a1a;
+            --surface: #1a1025;
+            --surface-light: #241a35;
+            --purple: #9b59b6;
+            --purple-light: #bb86fc;
+            --purple-dark: #6c3483;
+            --text: #e0d6f0;
+            --text-secondary: #a89cc4;
+            --accent-gradient: linear-gradient(135deg, #9b59b6, #6c3483);
+            --border: #2d1f3d;
+            --shadow: 0 4px 20px rgba(155, 89, 182, 0.25);
+            --glow: 0 0 30px rgba(155, 89, 182, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Анимированный фон с частицами */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--purple-light);
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+            25% { transform: translateY(-40px) scale(1.5); opacity: 0.8; }
+            50% { transform: translateY(-20px) scale(1); opacity: 0.4; }
+            75% { transform: translateY(-60px) scale(1.3); opacity: 0.6; }
+        }
+
+        @keyframes float-reverse {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+            25% { transform: translateY(50px) scale(1.4); opacity: 0.7; }
+            50% { transform: translateY(30px) scale(1); opacity: 0.3; }
+            75% { transform: translateY(70px) scale(1.2); opacity: 0.5; }
+        }
+
+        /* Основной контейнер */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Хедер */
+        header {
+            text-align: center;
+            padding: 80px 0 60px;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+            box-shadow: var(--glow);
+            animation: pulse-glow 3s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(155, 89, 182, 0.4); }
+            50% { box-shadow: 0 0 60px rgba(155, 89, 182, 0.7); }
+        }
+
+        .profile-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: var(--purple-light);
+            border-bottom-color: var(--purple-dark);
+            animation: spin-border 4s linear infinite;
+        }
+
+        @keyframes spin-border {
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e8d5ff, #bb86fc, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .subtitle span {
+            display: inline-block;
+            margin: 0 8px;
+            color: var(--purple-light);
+        }
+
+        /* Карточки навигации */
+        .nav-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .nav-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px 28px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(155, 89, 182, 0.08), transparent);
+            transition: left 0.6s;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--purple);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-card:hover::before {
+            left: 100%;
+        }
+
+        .nav-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .nav-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: #e8d5ff;
+        }
+
+        .nav-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .nav-card .arrow {
+            display: inline-block;
+            margin-top: 16px;
+            color: var(--purple-light);
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .nav-card:hover .arrow {
+            transform: translateX(6px);
+        }
+
+        /* Заголовки секций */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+            color: #e8d5ff;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-gradient);
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Секция */
+        .section {
+            padding: 60px 0;
+            scroll-margin-top: 40px;
+        }
+
+        /* Проекты */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            border-color: var(--purple);
+            box-shadow: var(--shadow);
+            transform: translateY(-3px);
+        }
+
+        .project-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+            color: #e8d5ff;
+        }
+
+        .project-card .tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 12px 0;
+        }
+
+        .tech-badge {
+            background: var(--surface-light);
+            color: var(--purple-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+        }
+
+        .project-link {
+            margin-top: auto;
+            color: var(--purple-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+
+        .project-link:hover {
+            color: #d4a5ff;
+        }
+
+        /* Сертификаты */
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .certificate-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .certificate-card:hover {
+            border-color: var(--purple);
+            box-shadow: var(--shadow);
+        }
+
+        .certificate-card h4 {
+            font-size: 1.1rem;
+            color: #e8d5ff;
+            margin-bottom: 4px;
+        }
+
+        .certificate-card .org {
+            color: var(--purple-light);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .certificate-card .link {
+            margin-top: 12px;
+            color: var(--purple-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .certificate-card .link:hover {
+            text-decoration: underline;
+        }
+
+        /* Обо мне */
+        .about-content {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .about-content p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+        }
+
+        .about-content .highlight {
+            color: #e8d5ff;
+            font-weight: 600;
+        }
+
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .quick-link {
+            background: var(--surface-light);
+            color: var(--purple-light);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .quick-link:hover {
+            background: var(--purple-dark);
+            border-color: var(--purple-light);
+            color: #fff;
+        }
+
+        /* Футер */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        /* Адаптив */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .profile-avatar { width: 100px; height: 100px; font-size: 38px; }
+            header { padding: 50px 0 40px; }
+            .section { padding: 40px 0; }
+            .section-title { font-size: 1.6rem; }
+            .nav-cards { grid-template-columns: 1fr; }
+            .projects-grid, .certificates-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Плавный скролл */
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+
+    <!-- Анимированный фон -->
+    <div class="bg-particles" id="particles"></div>
+
+    <div class="container">
+        <!-- Хедер -->
+        <header>
+            <div class="profile-avatar">М</div>
+            <h1>Михаил Мамонов</h1>
+            <p class="subtitle">
+                Frontend <span>•</span> DevOps <span>•</span> Security <span>•</span> AI
+            </p>
+        </header>
+
+        <!-- Навигационные карточки -->
+        <div class="nav-cards">
+            <a href="#projects" class="nav-card">
+                <div class="icon">🚀</div>
+                <h3>Мои проекты</h3>
+                <p>Веб-приложения, новеллы, системы</p>
+                <span class="arrow">Перейти к проектам →</span>
+            </a>
+            <a href="#certificates" class="nav-card">
+                <div class="icon">📜</div>
+                <h3>Сертификаты</h3>
+                <p>Frontend, DevOps, Security, AI</p>
+                <span class="arrow">Смотреть сертификаты →</span>
+            </a>
+            <a href="#about" class="nav-card">
+                <div class="icon">👤</div>
+                <h3>Обо мне</h3>
+                <p>Студент-разработчик</p>
+                <span class="arrow">Контакты и навыки →</span>
+            </a>
+        </div>
+
+        <!-- Секция проектов -->
+        <section class="section" id="projects">
+            <h2 class="section-title">Проекты</h2>
+            <div class="projects-grid">
+                <!-- Проект: Моя Новелла (Twine) -->
+                <div class="project-card">
+                    <h4>📖 Моя новелла (Twine)</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 8px 0;">
+                        Интерактивная текстовая игра с кастомным оформлением, фонами, подложками текста и персонажем.
+                    </p>
+                    <div class="tech">
+                        <span class="tech-badge">twee</span>
+                        <span class="tech-badge">CSS</span>
+                        <span class="tech-badge">HTML</span>
+                    </div>
+                    <a href="https://github.com/sigmno/twine" target="_blank" class="project-link">
+                        GitHub → <span style="font-size: 0.8rem;">sigmno/twine</span>
+                    </a>
+                </div>
+
+                <!-- Проект: Онлайн доска (YouGile) -->
+                <div class="project-card">
+                    <h4>📋 Онлайн доска (YouGile)</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 8px 0;">
+                        Проектная доска 4-го семестра. Ссылки на Google Диск и YouGile.
+                    </p>
+                    <div class="tech">
+                        <span class="tech-badge">YouGile</span>
+                        <span class="tech-badge">Google Drive</span>
+                        <span class="tech-badge">HTML</span>
+                    </div>
+                    <a href="https://github.com/sigmno/4-semestr" target="_blank" class="project-link">
+                        GitHub → <span style="font-size: 0.8rem;">sigmno/4-semestr</span>
+                    </a>
+                </div>
+
+                <!-- Проект: Сайт про лето (эталонный) -->
+                <div class="project-card">
+                    <h4>🏖️ Сайт про лето</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 8px 0;">
+                        Лендинг о летнем отдыхе с атмосферным дизайном.
+                    </p>
+                    <div class="tech">
+                        <span class="tech-badge">HTML</span>
+                        <span class="tech-badge">CSS</span>
+                        <span class="tech-badge">JavaScript</span>
+                    </div>
+                    <a href="#" class="project-link" style="opacity: 0.6;">GitHub →</a>
+                </div>
+
+                <!-- Проект: Сайт Astra-Linux -->
+                <div class="project-card">
+                    <h4>🐧 Сайт Astra-Linux</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 8px 0;">
+                        Информационный сайт об операционной системе Astra Linux.
+                    </p>
+                    <div class="tech">
+                        <span class="tech-badge">HTML</span>
+                        <span class="tech-badge">CSS</span>
+                        <span class="tech-badge">JavaScript</span>
+                    </div>
+                    <a href="#" class="project-link" style="opacity: 0.6;">GitHub →</a>
+                </div>
+
+                <!-- Проект: Сайт с авто -->
+                <div class="project-card">
+                    <h4>🚗 Сайт с авто</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 8px 0;">
+                        Автомобильный каталог с фильтрацией на Angular.
+                    </p>
+                    <div class="tech">
+                        <span class="tech-badge">HTML</span>
+                        <span class="tech-badge">CSS</span>
+                        <span class="tech-badge">JavaScript</span>
+                        <span class="tech-badge">Angular</span>
+                    </div>
+                    <a href="#" class="project-link" style="opacity: 0.6;">GitHub →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция сертификатов -->
+        <section class="section" id="certificates">
+            <h2 class="section-title">Сертификаты</h2>
+            <div class="certificates-grid">
+                <div class="certificate-card">
+                    <h4>IT Диктант</h4>
+                    <p class="org">HTML, CSS, JavaScript</p>
+                    <a href="https://drive.google.com/drive/u/1/folders/1CF9kIGZ0FYxT4mTsWqtZT04rnJvw0NCl" target="_blank" class="link">Открыть сертификат →</a>
+                </div>
+                <div class="certificate-card">
+                    <h4>Айтилогия</h4>
+                    <p class="org">HTML, CSS, JavaScript</p>
+                    <a href="https://drive.google.com/drive/u/1/folders/1CF9kIGZ0FYxT4mTsWqtZT04rnJvw0NCl" target="_blank" class="link">Открыть сертификат →</a>
+                </div>
+                <div class="certificate-card">
+                    <h4>Код будущего</h4>
+                    <p class="org">Сети, шифрование, DevSecOps</p>
+                    <a href="https://drive.google.com/drive/u/1/folders/1CF9kIGZ0FYxT4mTsWqtZT04rnJvw0NCl" target="_blank" class="link">Открыть сертификат →</a>
+                </div>
+                <div class="certificate-card">
+                    <h4>Олимпиада по ИИ</h4>
+                    <p class="org">HTML</p>
+                    <a href="https://drive.google.com/drive/u/1/folders/1CF9kIGZ0FYxT4mTsWqtZT04rnJvw0NCl" target="_blank" class="link">Открыть сертификат →</a>
+                </div>
+                <div class="certificate-card">
+                    <h4>VK Базовый HTML</h4>
+                    <p class="org">HTML</p>
+                    <a href="https://drive.google.com/drive/u/1/folders/1CF9kIGZ0FYxT4mTsWqtZT04rnJvw0NCl" target="_blank" class="link">Открыть сертификат →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция Обо мне -->
+        <section class="section" id="about">
+            <h2 class="section-title">Обо мне</h2>
+            <div class="about-content">
+                <p>
+                    Привет! Меня зовут <span class="highlight">Михаил Мамонов</span>, я студент-разработчик из России. 
+                    Мои основные интересы включают 
+                    <span class="highlight">Frontend-разработку</span>, 
+                    <span class="highlight">DevOps</span>, 
+                    <span class="highlight">информационную безопасность</span> и 
+                    <span class="highlight">искусственный интеллект</span>.
+                </p>
+                <p style="margin-top: 16px;">
+                    Учусь в <strong>ГБПОУ МО «Люберецкий техникум имени Ю.А. Гагарина»</strong> 
+                    по специальности 09.02.07 «Информационные системы и программирование». <strong>ИС-24</strong>
+                </p>
+                <div class="quick-links">
+                    <a href="https://github.com/sigmno" target="_blank" class="quick-link">💻 GitHub</a>
+                    <a href="https://ru.yougile.com/board/sqf0u2l33yo0" target="_blank" class="quick-link">📋 YouGile доска</a>
+                    <a href="https://drive.google.com/drive/u/1/folders/1CF9kIGZ0FYxT4mTsWqtZT04rnJvw0NCl" target="_blank" class="quick-link">📁 Сертификаты (Drive)</a>
+                    <a href="https://github.com/sigmno/twine" target="_blank" class="quick-link">📖 Моя новелла</a>
+                    <a href="https://github.com/sigmno/4-semestr" target="_blank" class="quick-link">📚 4 семестр</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Футер -->
+        <footer>
+            <p>© 2025 Михаил Мамонов. Студент-разработчик. Все права защищены.</p>
+            <p style="margin-top: 4px; font-size: 0.8rem; opacity: 0.7;">
+                Frontend • DevOps • Security • AI
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Генерация анимированных частиц на фоне
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 35;
+        const colors = ['#bb86fc', '#9b59b6', '#7d3c98', '#d4a5ff', '#6c3483'];
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            const size = Math.random() * 4 + 1;
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            const delay = Math.random() * 8;
+            const duration = Math.random() * 6 + 6;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const useReverse = Math.random() > 0.5;
+            
+            particle.style.cssText = `
+                left: ${x}%;
+                top: ${y}%;
+                width: ${size}px;
+                height: ${size}px;
+                background: ${color};
+                animation-delay: ${delay}s;
+                animation-duration: ${duration}s;
+                animation-name: ${useReverse ? 'float-reverse' : 'float'};
+                opacity: ${Math.random() * 0.5 + 0.2};
+            `;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Плавный скролл для всех якорных ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Эффект появления при скролле
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.project-card, .certificate-card, .nav-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Запускаем появление сразу для видимых карточек
+        setTimeout(() => {
+            document.querySelectorAll('.nav-card').forEach((card, i) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, i * 150);
+            });
+        }, 200);
+    </script>
+</body>
+</html>
